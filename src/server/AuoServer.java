@@ -47,14 +47,18 @@ public class AuoServer extends AbstractHandler {
 	 * 
 	 * @param path the absolute or relative path to the standalone application.
 	 * @param port the port to use for the server.
-	 * @throws Exception if an error occurs when starting the server.
+	 * @return An instance of AuoServer if the construction and start succeeded.
+	 * @throws RuntimeException if an error occurs when starting the server. 
 	 */
-	public static AuoServer start(final String path, final int port) throws Exception {
+	public static AuoServer start(final String path, final int port) {
 		final Server server = new Server(port);
 		final AuoServer auoServer = new AuoServer(path, port, server);
 		server.setHandler(auoServer);
-		server.start();
-		
+		try {
+			server.start();
+		} catch (Exception exp) {
+			throw new RuntimeException(exp);
+		}
 		return auoServer;
 	}
 	
@@ -136,7 +140,7 @@ public class AuoServer extends AbstractHandler {
 	/**
 	 * Terminates the server and joins all threads back together.
 	 * 
-	 * @throws Exception 
+	 * @throws RuntimeException if termination does not succeed. 
 	 */
 	public void terminate() {
 		Log.log(Log.INFO, "Stopping server...");
@@ -147,7 +151,7 @@ public class AuoServer extends AbstractHandler {
 			Log.log(Log.INFO, "Terminated server running in localhost:%d.", port);
 		} catch (Exception exp) {
 			Log.log(Log.ERROR, "Failed to terminate server running in localhost:%d.", port);
-			exp.printStackTrace();
+			throw new RuntimeException(exp);
 		}
 	}
 	
@@ -156,7 +160,7 @@ public class AuoServer extends AbstractHandler {
 	 * 
 	 * @throws Exception
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		final AuoServer server = AuoServer.start("../", 4444);
 		server.terminate();
 	}
