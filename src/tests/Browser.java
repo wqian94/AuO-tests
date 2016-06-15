@@ -27,13 +27,16 @@ public enum Browser {
     /**
      * Wraps the WebDriverWait-and-promise routine to enable easier wait-and-tests.
      * 
-     * @param driver the driver to wait on.
-     * @param timeout the timeout for the driver wait.
-     * @param functor the predicate functor to use as the promise-deliverer.
+     * @param driver
+     *            the driver to wait on.
+     * @param timeout
+     *            the timeout for the driver wait.
+     * @param functor
+     *            the predicate functor to use as the promise-deliverer.
      */
     public static void act(final WebDriver driver, final long timeout,
             final Predicate<WebDriver> func) {
-        final int sleep = 100;  // Sleep for 100ms at a time during waits.
+        final int sleep = 100; // Sleep for 100ms at a time during waits.
         new WebDriverWait(driver, timeout, sleep).until(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(final WebDriver driver) {
@@ -46,13 +49,16 @@ public enum Browser {
      * Wraps the WebDriverWait-and-promise routine to enable easier wait-and-tests for when no
      * boolean return is expected.
      * 
-     * @param driver the driver to wait on.
-     * @param timeout the timeout for the driver wait.
-     * @param functor the consumer functor to use as the promise-deliverer.
+     * @param driver
+     *            the driver to wait on.
+     * @param timeout
+     *            the timeout for the driver wait.
+     * @param functor
+     *            the consumer functor to use as the promise-deliverer.
      */
     public static void act(final WebDriver driver, final long timeout,
             final Consumer<WebDriver> func) {
-        final int sleep = 100;  // Sleep for 100ms at a time during waits.
+        final int sleep = 100; // Sleep for 100ms at a time during waits.
         new WebDriverWait(driver, timeout, sleep).until(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(final WebDriver driver) {
