@@ -10,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -108,6 +107,14 @@ public class AuoServer extends AbstractHandler {
     @Override
     public void handle(String target, Request baseRequest, HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
+        // If server has been logically stopped, send a 404: File not found.
+        if (ServerState.STOPPED == state) {
+            response.setContentType("text/html; charset=utf-8");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            baseRequest.setHandled(true);
+            return;
+        }
+        
         // Reformat the target string a little.
         target = target.replaceAll("/+", "/"); // Removes all duplicate slashes.
         
@@ -141,7 +148,8 @@ public class AuoServer extends AbstractHandler {
             
             final BufferedReader fin = new BufferedReader(new FileReader(targetFile));
             fin.lines().forEachOrdered(line -> out.println(line));
-        } else {
+            fin.close();
+        } else { // Send a 404: File not found.
             response.setContentType("text/html; charset=utf-8");
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
