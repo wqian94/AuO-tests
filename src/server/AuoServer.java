@@ -4,8 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.util.thread.ExecutorThreadPool;
+import org.eclipse.jetty.util.thread.ThreadPool;
 
 /**
  * class AuoServer
@@ -61,7 +72,7 @@ public class AuoServer extends AbstractHandler {
 		this.server = server;
 		this.state = ServerState.RUNNING;
 	    
-		System.out.printf("Server running in localhost on port %d.\n", port);
+		Log.log(Log.INFO, "Server running in localhost on port %d.", port);
 	}
 	
 	/**
@@ -101,7 +112,8 @@ public class AuoServer extends AbstractHandler {
 		}
 		
 		// Read (if possible) and output.
-		if (null != targetFile) {response.setContentType(Files.probeContentType(targetFile.toPath()) +
+		if (null != targetFile) {
+			response.setContentType(Files.probeContentType(targetFile.toPath()) +
 					"; charset=utf-8");
 			response.setStatus(HttpServletResponse.SC_OK);
 			
@@ -117,11 +129,25 @@ public class AuoServer extends AbstractHandler {
 	}
 	
 	/**
+	 * Terminates the server and joins all threads back together.
+	 * 
+	 * @throws Exception 
+	 */
+	public void terminate() throws Exception {
+		Log.log(Log.INFO, "Stopping server...");
+		state = ServerState.STOPPED;
+		server.stop();
+		server.getThreadPool().join();
+		Log.log(Log.INFO, "Terminated server running in localhost:%d.", port);
+	}
+	
+	/**
 	 * Runs this server as a standalone instance.
 	 * 
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		AuoServer.start("../", 4444);
+		final AuoServer server = AuoServer.start("../", 4444);
+		server.terminate();
 	}
 }
