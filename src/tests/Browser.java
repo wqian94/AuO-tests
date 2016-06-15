@@ -1,6 +1,8 @@
 package tests;
 
 import java.util.LinkedList;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -21,6 +23,44 @@ public enum Browser {
     CHROME;
     
     private static LinkedList<WebDriver> activeDrivers = new LinkedList<>();
+    
+    /**
+     * Wraps the WebDriverWait-and-promise routine to enable easier wait-and-tests.
+     * 
+     * @param driver the driver to wait on.
+     * @param timeout the timeout for the driver wait.
+     * @param functor the predicate functor to use as the promise-deliverer.
+     */
+    public static void act(final WebDriver driver, final long timeout,
+            final Predicate<WebDriver> func) {
+        final int sleep = 100;  // Sleep for 100ms at a time during waits.
+        new WebDriverWait(driver, timeout, sleep).until(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(final WebDriver driver) {
+                return func.test(driver);
+            }
+        });
+    }
+    
+    /**
+     * Wraps the WebDriverWait-and-promise routine to enable easier wait-and-tests for when no
+     * boolean return is expected.
+     * 
+     * @param driver the driver to wait on.
+     * @param timeout the timeout for the driver wait.
+     * @param functor the consumer functor to use as the promise-deliverer.
+     */
+    public static void act(final WebDriver driver, final long timeout,
+            final Consumer<WebDriver> func) {
+        final int sleep = 100;  // Sleep for 100ms at a time during waits.
+        new WebDriverWait(driver, timeout, sleep).until(new ExpectedCondition<Boolean>() {
+            @Override
+            public Boolean apply(final WebDriver driver) {
+                func.accept(driver);
+                return true;
+            }
+        });
+    }
     
     /**
      * Cleans up all active drivers by closing all active windows and ending all sessions.
@@ -55,11 +95,8 @@ public enum Browser {
         
         // Retrieve and load the page.
         driver.get(target);
-        new WebDriverWait(driver, 60).until(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(final WebDriver driver) {
-                return driver.findElement(By.className("AuO")).isDisplayed();
-            }
+        act(driver, 60, (client) -> {
+            return client.findElement(By.className("AuO")).isDisplayed();
         });
         
         return driver;
