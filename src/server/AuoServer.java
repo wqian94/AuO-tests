@@ -81,7 +81,7 @@ public class AuoServer extends AbstractHandler {
 	 * @return A String, the URL for the root of this server.
 	 */
 	public String getURL() {
-		return String.format("https://localhost:%d/", port);
+		return String.format("http://localhost:%d/", port);
 	}
 	
 	/**
@@ -93,6 +93,11 @@ public class AuoServer extends AbstractHandler {
 			HttpServletResponse response) throws IOException, ServletException {
 		// Reformat the target string a little.
 		target = target.replaceAll("/+", "/");  // Removes all duplicate slashes.
+		
+		if ("/stop".equalsIgnoreCase(target)) {
+			terminate();
+			return;
+		}
 		
 		// Prepare to write document body.
 		final PrintWriter out = response.getWriter();
@@ -133,12 +138,17 @@ public class AuoServer extends AbstractHandler {
 	 * 
 	 * @throws Exception 
 	 */
-	public void terminate() throws Exception {
+	public void terminate() {
 		Log.log(Log.INFO, "Stopping server...");
 		state = ServerState.STOPPED;
-		server.stop();
-		server.getThreadPool().join();
-		Log.log(Log.INFO, "Terminated server running in localhost:%d.", port);
+		try {
+			server.stop();
+			server.getThreadPool().join();
+			Log.log(Log.INFO, "Terminated server running in localhost:%d.", port);
+		} catch (Exception exp) {
+			Log.log(Log.ERROR, "Failed to terminate server running in localhost:%d.", port);
+			exp.printStackTrace();
+		}
 	}
 	
 	/**

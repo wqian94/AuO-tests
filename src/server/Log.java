@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public enum Log {
-	INFO("[INFO] ");
+	INFO("[INFO] "), ERROR("[ERROR] ");
 	
 	private final static PrintStream logStream = new PrintStream(System.err);
 	private final static DateTimeFormatter logDateFormatter =
