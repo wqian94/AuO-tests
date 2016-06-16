@@ -34,13 +34,17 @@ public enum Browser {
      * @param functor
      *            the predicate functor to use as the promise-deliverer.
      */
-    public static void act(final WebDriver driver, final long timeout,
+    public static void test(final WebDriver driver, final long timeout,
             final Predicate<WebDriver> func) {
         final int sleep = 100; // Sleep for 100ms at a time during waits.
         new WebDriverWait(driver, timeout, sleep).until(new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(final WebDriver driver) {
-                return func.test(driver);
+                try {
+                    return func.test(driver);
+                } catch (Exception exp) {
+                    throw exp;
+                }
             }
         });
     }
@@ -56,15 +60,11 @@ public enum Browser {
      * @param functor
      *            the consumer functor to use as the promise-deliverer.
      */
-    public static void act(final WebDriver driver, final long timeout,
+    public static void wait(final WebDriver driver, final long timeout,
             final Consumer<WebDriver> func) {
-        final int sleep = 100; // Sleep for 100ms at a time during waits.
-        new WebDriverWait(driver, timeout, sleep).until(new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(final WebDriver driver) {
-                func.accept(driver);
-                return true;
-            }
+        test(driver, timeout, (client) -> {
+            func.accept(client);
+            return true;
         });
     }
     
@@ -101,7 +101,7 @@ public enum Browser {
         
         // Retrieve and load the page.
         driver.get(target);
-        act(driver, 60, (client) -> {
+        test(driver, 60, (client) -> {
             return client.findElement(By.className("AuO")).isDisplayed();
         });
         
@@ -115,6 +115,8 @@ public enum Browser {
      */
     private static WebDriver getDriverChrome() {
         final ChromeOptions options = new ChromeOptions();
+        options.addArguments("display=:42");
+        options.addArguments("start-maximized");
         options.addArguments("use-fake-ui-for-media-stream=true");
         final WebDriver driver = new ChromeDriver(options);
         return driver;
