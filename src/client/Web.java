@@ -1,4 +1,4 @@
-package tests;
+package client;
 
 import java.util.LinkedList;
 import java.util.function.Consumer;
@@ -11,18 +11,66 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import server.Log;
+
 /**
- * class DriverSetup
+ * class Web
  * 
- * Provides factory methods that wrap the driver production steps to be browser-independent, so that
- * the tests only need to be written once (presumably).
+ * Provides methods that wrap the driver production steps to be browser-independent, so that the
+ * tests only need to be written once (presumably).
  * 
  * @author wqian94
  */
-public enum Browser {
-    CHROME;
+public class Web {
+    private static final int DISPLAY = 42; // Currently hardcoded, should move to dynamic later.
+    
+    private static boolean initiated = false;
     
     private static LinkedList<WebDriver> activeDrivers = new LinkedList<>();
+    private static Process processXvfb = null;
+    
+    /**
+     * The initiation method, for setting up the environment. Requires that all previous initiations
+     * have been terminated.
+     */
+    public static void initiate() {
+        if (initiated) {
+            throw new RuntimeException("Active Web environment currently exists. "
+                    + "Call terminate() before initiating a new session.");
+        }
+        
+        final ProcessBuilder pb = new ProcessBuilder(
+                new String[] { "Xvfb", ":" + DISPLAY, "-screen", "0", "1600x1200x24" });
+        pb.inheritIO();
+        pb.redirectError();
+        pb.redirectOutput();
+        try {
+            processXvfb = pb.start();
+        } catch (Exception exp) {
+            throw new RuntimeException(exp);
+        }
+        
+        System.setProperty("webdriver.chrome.bin", "/usr/bin/google-chrome");
+        System.setProperty("webdriver.chrome.driver", "lib/chromedriver");
+        
+        Log.log(Log.INFO, "Web session successfully initiated on display %d.", DISPLAY);
+        
+        initiated = true;
+    }
+    
+    /**
+     * The termination method, for tearing down the environment. Requires that an active, initiated
+     * session exists.
+     */
+    public static void terminate() {
+        if (!initiated) {
+            throw new RuntimeException("No active Web environment currently exists. "
+                    + "Call initiated() before attempting to terminate a session.");
+        }
+        
+        endDrivers();
+        processXvfb.destroy();
+    }
     
     /**
      * Wraps the WebDriverWait-and-promise routine to enable easier wait-and-tests.
@@ -82,18 +130,28 @@ public enum Browser {
     }
     
     /**
-     * Dynamically creates a WebDriver to use in tests, based on the selected browser type.
+     * Dynamically creates a WebDriver to use in tests, based on the selected browser type. Will
+     * load the page and wait until the page loads such that the element specified by the condition
+     * has been displayed.
      * 
-     * @return A WebDriver that has already loaded the page and enabled microphone permissions.
+     * @param browser
+     *            the type of browser to emulate.
+     * @param target
+     *            the page to load.
+     * @param condition
+     *            a By stating what element to wait on. If null, no wait will occur.
      */
-    public static WebDriver getDriver(final Browser browser, final String target) {
-        WebDriver driver = null;
+    public static WebDriver getDriver(final Browser browser, final String target,
+            final By condition) {
+        WebDriver driver;
         
         switch (browser) {
             case CHROME:
                 driver = getDriverChrome();
                 break;
-            // As long as we implement a case for each enum value, we don't need a default.
+            // As long as we implement a case for each enum value, we shouldn't get here.
+            default:
+                throw new IllegalArgumentException("Browser support for " + browser + " missing!");
         }
         
         // Keep track of the created driver.
@@ -102,7 +160,7 @@ public enum Browser {
         // Retrieve and load the page.
         driver.get(target);
         test(driver, 60, (client) -> {
-            return client.findElement(By.className("AuO")).isDisplayed();
+            return client.findElement(condition).isDisplayed();
         });
         
         return driver;
