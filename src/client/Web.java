@@ -6,6 +6,7 @@ import java.util.function.Predicate;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -114,6 +115,17 @@ public class Web {
             func.accept(client);
             return true;
         });
+    }
+    
+    /**
+     * Macro wrapper for selecting by css selectors.
+     * 
+     * @param driver the driver to select from.
+     * @param selector the CSS selector to use.
+     * @return A WebElement, the result of driver.findElement(By.cssSelector(selector)).
+     */
+    public static WebElement cssSelect(final WebDriver driver, final String selector) {
+        return driver.findElement(By.cssSelector(selector));
     }
     
     /**
