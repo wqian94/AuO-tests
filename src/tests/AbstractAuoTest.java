@@ -18,10 +18,11 @@ import server.AuoServer;
  * @author wqian94
  */
 public abstract class AbstractAuoTest {
-    protected final static AuoServer server = AuoServer.start("../", 0); // Randomly-allocated port.
+    protected static AuoServer server; 
     
     @BeforeClass
     public static void setUpClass() {
+        server = AuoServer.start("../", 0); // Randomly-allocated port.
         Web.initiate();
     }
     

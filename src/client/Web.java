@@ -32,13 +32,16 @@ public class Web {
     private static Process processXvfb = null;
     
     /**
-     * The initiation method, for setting up the environment. Requires that all previous initiations
-     * have been terminated.
+     * The initiation method, for setting up the environment. Will not set up a new environment if
+     * an old one already exists.
+     * 
+     * @return A boolean indicating whether a new environment was set up.
      */
-    public static void initiate() {
+    public static boolean initiate() {
         if (initiated) {
-            throw new RuntimeException("Active Web environment currently exists. "
+            Log.log(Log.INFO, "Active Web environment currently exists. "
                     + "Call terminate() before initiating a new session.");
+            return false;
         }
         
         final ProcessBuilder pb = new ProcessBuilder(
@@ -58,6 +61,8 @@ public class Web {
         Log.log(Log.INFO, "Web session successfully initiated on display %d.", DISPLAY);
         
         initiated = true;
+        
+        return true;
     }
     
     /**
@@ -72,6 +77,12 @@ public class Web {
         
         endDrivers();
         processXvfb.destroy();
+        try {
+            processXvfb.waitFor();  // Wait for Xvfb to terminate.
+        } catch (Exception exp) {
+            exp.printStackTrace();
+        }
+        initiated = false;
     }
     
     /**
