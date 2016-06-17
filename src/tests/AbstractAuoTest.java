@@ -20,16 +20,6 @@ import server.AuoServer;
 public abstract class AbstractAuoTest {
     private static AuoServer server;
     
-    /**
-     * Produces the underlying AuoServer. Abstracted away to enforce encapsulation in the abstract
-     * class and prevent tests from ``accidentally" modifying the server directly.
-     * 
-     * @return The currently-running AuoServer instance.
-     */
-    protected static AuoServer getServer() {
-        return server;
-    }
-    
     @BeforeClass
     public static void setUpClass() {
         server = AuoServer.start("../", 0); // Randomly-allocated port.
@@ -47,6 +37,22 @@ public abstract class AbstractAuoTest {
         Web.endDrivers();
     }
     
+    /**
+     * Produces the underlying AuoServer. Abstracted away to enforce encapsulation in the abstract
+     * class and prevent tests from ``accidentally" modifying the server directly.
+     * 
+     * @return The currently-running AuoServer instance.
+     */
+    protected static AuoServer getServer() {
+        return server;
+    }
+    
+    /**
+     * Produces a WebDriver that loads the AuO standalone project page and ensures that AuO is
+     * launched.
+     * 
+     * @return The WebDriver that was created, with the page loaded and AuO launched.
+     */
     protected WebDriver getDriver() {
         return Web.getDriver(Browser.CHROME, server.getURL(), By.className("AuO"));
     }
