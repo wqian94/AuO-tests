@@ -1,6 +1,7 @@
 package client;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -118,7 +119,7 @@ public class Web {
     }
     
     /**
-     * Macro wrapper for selecting by css selectors.
+     * Macro wrapper for selecting an element by CSS selector.
      * 
      * @param driver the driver to select from.
      * @param selector the CSS selector to use.
@@ -126,6 +127,17 @@ public class Web {
      */
     public static WebElement cssSelect(final WebDriver driver, final String selector) {
         return driver.findElement(By.cssSelector(selector));
+    }
+    
+    /**
+     * Macro wrapper for selecting multiple elements by CSS selector.
+     * 
+     * @param driver the driver to select from.
+     * @param selector the CSS selector to use.
+     * @return A List<WebElement>, the result of driver.findElements(By.cssSelector(selector)).
+     */
+    public static List<WebElement> cssSelects(final WebDriver driver, final String selector) {
+        return driver.findElements(By.cssSelector(selector));
     }
     
     /**
