@@ -8,7 +8,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import client.Browser;
 import client.Web;
 import server.AuoServer;
@@ -61,63 +60,48 @@ public class MainUITest {
     @Test
     public void testServerIsRunning() {
         final WebDriver driver = getDriver();
-        Web.wait(driver, 1, (client) -> {
-            assertEquals("loaded URL should be server root", server.getURL(),
-                    client.getCurrentUrl());
-        });
+        assertEquals("loaded URL should be server root", server.getURL(), driver.getCurrentUrl());
     }
     
     @Test
     public void testMainUiExistence() {
         final WebDriver driver = getDriver();
-        Web.wait(driver, 1, (client) -> {
-            final WebElement mainUI = Web.cssSelect(client, ".AuO .auo-main-ui");
-            assertTrue("expecting main UI to display", mainUI.isDisplayed());
-        });
+        assertTrue("expected main UI to display",
+                Web.cssSelect(driver, ".AuO .auo-main-ui").isDisplayed());
     }
     
     @Test
     public void testTitleBarExistence() {
         final WebDriver driver = getDriver();
-        Web.wait(driver, 1, (client) -> {
-            final WebElement titleBar = Web.cssSelect(driver, ".AuO .auo-title-bar");
-            assertTrue("expecting title bar to display", titleBar.isDisplayed());
-        });
+        assertTrue("expected title bar to display",
+                Web.cssSelect(driver, ".AuO .auo-title-bar").isDisplayed());
     }
     
     @Test
     public void testControlsUiExistence() {
         final WebDriver driver = getDriver();
-        Web.wait(driver, 1, (client) -> {
-            final WebElement controlsUI = Web.cssSelect(driver, ".AuO .auo-controls-ui");
-            assertTrue("expecting controls UI to display", controlsUI.isDisplayed());
-        });
+        assertTrue("expected controls UI to display",
+                Web.cssSelect(driver, ".AuO .auo-controls-ui").isDisplayed());
     }
     
     @Test
     public void testZoomUiExistence() {
         final WebDriver driver = getDriver();
-        Web.wait(driver, 1, (client) -> {
-            final WebElement zoomUI = Web.cssSelect(driver, ".AuO .auo-zoom-ui");
-            assertTrue("expecting zoom UI to display", zoomUI.isDisplayed());
-        });
+        assertTrue("expected zoom UI to display",
+                Web.cssSelect(driver, ".AuO .auo-zoom-ui").isDisplayed());
     }
     
     @Test
     public void testAudioUiExistence() {
         final WebDriver driver = getDriver();
-        Web.wait(driver, 1, (client) -> {
-            final WebElement audioUI = Web.cssSelect(driver, ".AuO .auo-audio-ui");
-            assertTrue("expecting audio UI to display", audioUI.isDisplayed());
-        });
+        assertTrue("expected audio UI to display",
+                Web.cssSelect(driver, ".AuO .auo-audio-ui").isDisplayed());
     }
     
     @Test
     public void testSaveUiExistence() {
         final WebDriver driver = getDriver();
-        Web.wait(driver, 1, (client) -> {
-            final WebElement saveUI = Web.cssSelect(driver, ".AuO .auo-save-ui");
-            assertTrue("expecting save UI to display", saveUI.isDisplayed());
-        });
+        assertTrue("expected save UI to display",
+                Web.cssSelect(driver, ".AuO .auo-save-ui").isDisplayed());
     }
 }
