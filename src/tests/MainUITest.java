@@ -2,15 +2,9 @@ package tests;
 
 import static org.junit.Assert.*;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import client.Browser;
 import client.Web;
-import server.AuoServer;
 
 /**
  * MainUITest
@@ -19,7 +13,7 @@ import server.AuoServer;
  * 
  * @author wqian94
  */
-public class MainUITest {
+public class MainUITest extends AbstractAuoTest {
     /**
      * @formatter:off
      * 
@@ -29,33 +23,6 @@ public class MainUITest {
      * 
      * @formatter:on
      */
-    
-    private final static AuoServer server = AuoServer.start("../", 0); // Randomly-allocated port.
-    
-    @BeforeClass
-    public static void setUpClass() {
-        Web.initiate();
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-        server.terminate();
-        Web.terminate();
-    }
-    
-    @After
-    public void tearDown() {
-        Web.endDrivers();
-    }
-    
-    private WebDriver getDriver() {
-        return Web.getDriver(Browser.CHROME, server.getURL(), By.className("AuO"));
-    }
-    
-    @Test(expected = AssertionError.class)
-    public void testAssertionsEnabled() {
-        assert false;
-    }
     
     @Test
     public void testServerIsRunning() {
