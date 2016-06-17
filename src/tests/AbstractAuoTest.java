@@ -18,7 +18,17 @@ import server.AuoServer;
  * @author wqian94
  */
 public abstract class AbstractAuoTest {
-    protected static AuoServer server; 
+    private static AuoServer server;
+    
+    /**
+     * Produces the underlying AuoServer. Abstracted away to enforce encapsulation in the abstract
+     * class and prevent tests from ``accidentally" modifying the server directly.
+     * 
+     * @return The currently-running AuoServer instance.
+     */
+    protected static AuoServer getServer() {
+        return server;
+    }
     
     @BeforeClass
     public static void setUpClass() {
