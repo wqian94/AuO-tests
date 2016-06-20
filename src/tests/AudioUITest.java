@@ -2,8 +2,12 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+
 import client.Web;
 
 /**
@@ -78,11 +82,169 @@ public class AudioUITest extends AbstractAuoTest {
                 .cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-end-trimmer").getSize()
                 .getWidth();
         
-        System.out.printf("%d %d %d %d\n", displayWidth, startTrimmerWidth, endTrimmerWidth, audioUiWidth);
+        System.out.printf("%d %d %d %d\n", displayWidth, startTrimmerWidth, endTrimmerWidth,
+                audioUiWidth);
         
         assertEquals("expected display, start trimmer, and end trimmer to fill the width of the UI",
                 audioUiWidth, displayWidth + startTrimmerWidth + endTrimmerWidth);
     }
     
-    // TODO: Drag-and-drop tests, once proper support via Selenium is available.
+    // TODO: Run drag-and-drop tests, once proper support via Selenium is available.
+    
+    @Ignore
+    @Test
+    public void testEndTrimmerDragAndDrop() throws InterruptedException {
+        final WebDriver driver = getDriver();
+        final int dragDistance = 100;
+        
+        final WebElement endTrimmer = Web.cssSelect(driver,
+                ".AuO .auo-audio-ui .auo-audio-end-trimmer");
+        final int endTrimmerInitialWidth = endTrimmer.getSize().getWidth();
+        
+        // Drag the end trimmer by dragDistance to the left.
+        new Actions(driver).dragAndDropBy(endTrimmer, -dragDistance, 0).perform();
+        
+        final int endTrimmerFinalWidth = Web
+                .cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-end-trimmer").getSize()
+                .getWidth();
+        
+        assertEquals("expected trimmer to widen by exactly dragged offset.", dragDistance,
+                endTrimmerFinalWidth - endTrimmerInitialWidth);
+    }
+    
+    @Ignore
+    @Test
+    public void testStartTrimmerDragAndDrop() throws InterruptedException {
+        final WebDriver driver = getDriver();
+        final int dragDistance = 100;
+        
+        final WebElement startTrimmer = Web.cssSelect(driver,
+                ".AuO .auo-audio-ui .auo-audio-start-trimmer");
+        final int startTrimmerInitialWidth = startTrimmer.getSize().getWidth();
+        
+        // Drag the end trimmer by dragDistance to the right.
+        new Actions(driver).dragAndDropBy(startTrimmer, dragDistance, 0).perform();
+        
+        final int startTrimmerFinalWidth = Web
+                .cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-start-trimmer").getSize()
+                .getWidth();
+        
+        assertEquals("expected trimmer to widen by exactly dragged offset.", dragDistance,
+                startTrimmerFinalWidth - startTrimmerInitialWidth);
+    }
+    
+    @Ignore
+    @Test
+    public void testTickerDragAndDrop() throws InterruptedException {
+        final WebDriver driver = getDriver();
+        final int dragDistance = 100;
+        
+        final WebElement ticker = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-ticker");
+        final int tickerInitialLeft = ticker.getLocation().getX();
+        
+        // Drag the ticker by dragDistance to the right.
+        new Actions(driver).dragAndDropBy(ticker, dragDistance, 0).perform();
+        
+        final int tickerFinalLeft = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-ticker")
+                .getLocation().getX();
+        
+        assertEquals("expected ticker to move by exactly dragged offset.", dragDistance,
+                tickerFinalLeft - tickerInitialLeft);
+    }
+    
+    @Ignore
+    @Test
+    public void testTickerDragAndDropDoesNotMoveBeyondEndTrimmer() throws InterruptedException {
+        final WebDriver driver = getDriver();
+        final int displayWidth = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-display")
+                .getSize().getWidth();
+        final int dragDistance = displayWidth * 2;
+        
+        final WebElement ticker = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-ticker");
+        final int tickerInitialLeft = ticker.getLocation().getX();
+        
+        // Drag the ticker by dragDistance to the right.
+        new Actions(driver).dragAndDropBy(ticker, dragDistance, 0).perform();
+        
+        final int tickerFinalLeft = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-ticker")
+                .getLocation().getX();
+        
+        assertEquals("expected ticker to move exactly as far as the end trimmer.", displayWidth,
+                tickerFinalLeft - tickerInitialLeft);
+    }
+    
+    @Ignore
+    @Test
+    public void testTickerDragAndDropDoesNotMoveBeyondStartTrimmer() throws InterruptedException {
+        final WebDriver driver = getDriver();
+        final int displayWidth = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-display")
+                .getSize().getWidth();
+        final int dragDistance = displayWidth;
+        
+        final WebElement ticker = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-ticker");
+        final int tickerInitialLeft = ticker.getLocation().getX();
+        
+        // Drag the ticker by dragDistance to the left.
+        new Actions(driver).dragAndDropBy(ticker, -dragDistance, 0).perform();
+        
+        final int tickerFinalLeft = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-ticker")
+                .getLocation().getX();
+        
+        assertEquals("expected ticker to move exactly as far as the start trimmer.", 0,
+                tickerFinalLeft - tickerInitialLeft);
+    }
+    
+    @Ignore
+    @Test
+    public void testEndTrimmerDragAndDropRepositionsTicker() throws InterruptedException {
+        final WebDriver driver = getDriver();
+        final int displayWidth = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-display")
+                .getSize().getWidth();
+        final int dragDistance = displayWidth;
+        
+        // Drag the ticker all the way to the right.
+        new Actions(driver)
+                .dragAndDropBy(Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-ticker"),
+                        dragDistance, 0)
+                .perform();
+        
+        final int tickerInitialLeft = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-ticker")
+                .getLocation().getX();
+        
+        // Drag the end trimmer all the way to the left.
+        new Actions(driver)
+                .dragAndDropBy(Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-end-trimmer"),
+                        -dragDistance, 0)
+                .perform();
+        
+        final int tickerFinalLeft = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-ticker")
+                .getLocation().getX();
+        
+        assertEquals("expected ticker to move with the end trimmer.", -displayWidth,
+                tickerFinalLeft - tickerInitialLeft);
+    }
+    
+    @Ignore
+    @Test
+    public void testStartTrimmerDragAndDropRepositionsTicker() throws InterruptedException {
+        final WebDriver driver = getDriver();
+        final int displayWidth = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-display")
+                .getSize().getWidth();
+        final int dragDistance = displayWidth;
+        
+        final WebElement ticker = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-ticker");
+        final int tickerInitialLeft = ticker.getLocation().getX();
+        
+        // Drag the start trimmer all the way to the right.
+        new Actions(driver)
+                .dragAndDropBy(Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-start-trimmer"),
+                        -dragDistance, 0)
+                .perform();
+        
+        final int tickerFinalLeft = Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-ticker")
+                .getLocation().getX();
+        
+        assertEquals("expected ticker to move with the start trimmer.", displayWidth,
+                tickerFinalLeft - tickerInitialLeft);
+    }
 }
