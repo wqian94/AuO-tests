@@ -22,7 +22,7 @@ public abstract class AbstractAuoTest {
     
     @BeforeClass
     public static void setUpClass() {
-        server = AuoServer.start("../", 0); // Randomly-allocated port.
+        server = AuoServer.start("../lib/", 0); // Randomly-allocated port.
         Web.initiate();
     }
     
@@ -54,7 +54,7 @@ public abstract class AbstractAuoTest {
      * @return The WebDriver that was created, with the page loaded and AuO launched.
      */
     protected WebDriver getDriver() {
-        return Web.getDriver(Browser.CHROME, server.getURL(), By.className("AuO"));
+        return Web.getDriver(Browser.CHROME, server.getURL() + "TEST", By.className("AuO"));
     }
     
     @Test(expected = AssertionError.class)

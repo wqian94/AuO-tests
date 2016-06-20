@@ -18,26 +18,25 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 /**
  * class AuoServer
  * 
- * This launches a Jetty server to serve the AuO standalone application at its root. Uses SSL to
+ * This launches a Jetty server to serve an AuO standalone application at its root. Uses SSL to
  * enable the use of the Web Audio API.
  * 
  * @author wqian94
  */
 public class AuoServer extends AbstractHandler {
-    private final String path; // Relative path to the root of the standalone
-                               // application.
-    private final Server server; // The Jetty Server that's backing the AuO
-                                 // server.
+    private static final String TEST_URL = "TEST"; // The special-cased test page URL.
     
-    private volatile ServerState state; // The current state of the server:
-                                        // RUNNING or STOPPED.
+    private final String path; // Relative path to the root of the AuO.js file.
+    private final Server server; // The Jetty Server that's backing the AuO server.
+    
+    private volatile ServerState state; // The current state of the server: RUNNING or STOPPED.
     
     /**
      * Launches a new Jetty server for the AuO standalone application, with SSL enabled. Requires
-     * the path (absolute or relative) to the file to be served and a port for the server.
+     * the path (absolute or relative) to AuO.js file to be served and a port for the server.
      * 
      * @param path
-     *            the absolute or relative path to the standalone application.
+     *            the absolute or relative path to the AuO.js file.
      * @param port
      *            the port to use for the server.
      * @return An instance of AuoServer if the construction and start succeeded.
@@ -62,7 +61,7 @@ public class AuoServer extends AbstractHandler {
      * will join the Jetty server to properly exit.
      * 
      * @param path
-     *            the absolute or relative path to the standalone application.
+     *            the absolute or relative path to the AuO.js file.
      * @param server
      *            the Jetty Server object encapsulating this server.
      */
@@ -99,6 +98,15 @@ public class AuoServer extends AbstractHandler {
     }
     
     /**
+     * Returns the URL for the test page of this server.
+     * 
+     * @return A String, the special-cased URL for the test page.
+     */
+    public String getTestURL() {
+        return getURL() + TEST_URL;
+    }
+    
+    /**
      * Handles a connection to this server.
      * 
      * @param socket
@@ -117,41 +125,63 @@ public class AuoServer extends AbstractHandler {
         
         // Reformat the target string a little.
         target = target.replaceAll("/+", "/"); // Removes all duplicate slashes.
+        target = target.replaceAll("^/*", ""); // Removes initial slash from the target.
         
-        if ("/stop".equalsIgnoreCase(target)) {
+        if ("stop".equalsIgnoreCase(target)) {
             terminate();
             return;
-        }
-        
-        // Prepare to write document body.
-        final PrintWriter out = response.getWriter();
-        
-        // Search for files down a list of priorities.
-        final String[] suffices = { "", "/index.php", "/index.html" };
-        File targetFile = null;
-        for (final String suffix : suffices) {
-            final String filePath = (path + target + suffix).replaceAll("/+", "/");
-            final File file = new File(filePath);
-            
-            // Select the file and exit the loop.
-            if (file.isFile()) {
-                targetFile = file;
-                break;
-            }
-        }
-        
-        // Read (if possible) and output.
-        if (null != targetFile) {
-            response.setContentType(
-                    Files.probeContentType(targetFile.toPath()) + "; charset=utf-8");
-            response.setStatus(HttpServletResponse.SC_OK);
-            
-            final BufferedReader fin = new BufferedReader(new FileReader(targetFile));
-            fin.lines().forEachOrdered(line -> out.println(line));
-            fin.close();
-        } else { // Send a 404: File not found.
+        } else if (TEST_URL.equals(target)) { // Generates testing AuO HTML page.
             response.setContentType("text/html; charset=utf-8");
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(
+                    // @formatter:off
+  "<html>"
++ "<head>"
++ "<script type=\"application/javascript\" src=\"AuO.js\"></script>"
++ "</head>"
++ "<body>"
++ "<script type=\"application/javascript\">"
++ "new AuO(\"" + getURL() + "TEST-SAVE\", function (request) {alert(request.response);}).launch();"
++ "</script>"
++ "</body>"
++ "</html>"
+                    // @formatter:on
+            );
+        } else if ((TEST_URL + "-SAVE").equals(target)) {  // Generates responses to save requests.
+            response.setContentType("text/plain; charset=utf-8");
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write("Save acknowledged.");
+        } else {
+            // Prepare to write document body.
+            final PrintWriter out = response.getWriter();
+            
+            // Search for files down a list of priorities.
+            final String[] suffices = { "", "/index.php", "/index.html" };
+            File targetFile = null;
+            for (final String suffix : suffices) {
+                final String filePath = (path + target + suffix).replaceAll("/+", "/");
+                final File file = new File(filePath);
+                
+                // Select the file and exit the loop.
+                if (file.isFile()) {
+                    targetFile = file;
+                    break;
+                }
+            }
+            
+            // Read (if possible) and output.
+            if (null != targetFile) {
+                response.setContentType(
+                        Files.probeContentType(targetFile.toPath()) + "; charset=utf-8");
+                response.setStatus(HttpServletResponse.SC_OK);
+                
+                final BufferedReader fin = new BufferedReader(new FileReader(targetFile));
+                fin.lines().forEachOrdered(line -> out.println(line));
+                fin.close();
+            } else { // Send a 404: File not found.
+                response.setContentType("text/html; charset=utf-8");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
         }
         
         // Tell Jetty that we have handled this request.
@@ -186,7 +216,7 @@ public class AuoServer extends AbstractHandler {
      * @throws Exception
      */
     public static void main(String[] args) {
-        final AuoServer server = AuoServer.start("../", 4444);
-        server.terminate();
+        final AuoServer server = AuoServer.start("../lib/", 4444);
+        server.terminate(); // Comment this line out if you want a living server.
     }
 }
