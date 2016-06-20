@@ -49,7 +49,7 @@ public class TitleBarTest extends AbstractAuoTest {
         
         Web.cssSelect(driver, ".AuO .auo-title-close").click();
         
-        assertEquals("expected no more AuO UI instances to exist.",
-                Collections.emptyList(), Web.cssSelects(driver, ".AuO"));
+        assertEquals("expected no more AuO UI instances to exist.", Collections.emptyList(),
+                Web.cssSelects(driver, ".AuO"));
     }
 }

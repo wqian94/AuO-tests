@@ -27,8 +27,8 @@ public class MainUITest extends AbstractAuoTest {
     @Test
     public void testServerIsRunning() {
         final WebDriver driver = getDriver();
-        assertEquals("loaded URL should be server root",
-                getServer().getURL(), driver.getCurrentUrl());
+        assertEquals("loaded URL should be server root", getServer().getURL(),
+                driver.getCurrentUrl());
     }
     
     @Test

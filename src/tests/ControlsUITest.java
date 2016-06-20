@@ -52,7 +52,8 @@ public class ControlsUITest extends AbstractAuoTest {
     /**
      * Produces the WebElement corresponding to the record button.
      * 
-     * @param driver the WebDriver to retrieve the WebElement from.
+     * @param driver
+     *            the WebDriver to retrieve the WebElement from.
      * @return The WebElement that corresponds to the record button.
      */
     private WebElement getRecordButton(final WebDriver driver) {
@@ -62,7 +63,8 @@ public class ControlsUITest extends AbstractAuoTest {
     /**
      * Produces the WebElement corresponding to the play button.
      * 
-     * @param driver the WebDriver to retrieve the WebElement from.
+     * @param driver
+     *            the WebDriver to retrieve the WebElement from.
      * @return The WebElement that corresponds to the play button.
      */
     private WebElement getPlayButton(final WebDriver driver) {
@@ -72,7 +74,8 @@ public class ControlsUITest extends AbstractAuoTest {
     /**
      * Produces the WebElement corresponding to the stop button.
      * 
-     * @param driver the WebDriver to retrieve the WebElement from.
+     * @param driver
+     *            the WebDriver to retrieve the WebElement from.
      * @return The WebElement that corresponds to the stop button.
      */
     private WebElement getStopButton(final WebDriver driver) {
@@ -156,10 +159,10 @@ public class ControlsUITest extends AbstractAuoTest {
         
         assertEquals("expected record button to display correct message in idle state.",
                 recordMessage, getRecordButton(driver).getText());
-        assertEquals("expected play button to display correct message in idle state.",
-                playMessage, getPlayButton(driver).getText());
-        assertEquals("expected stop button to display correct message in idle state.",
-                stopMessage, getStopButton(driver).getText());
+        assertEquals("expected play button to display correct message in idle state.", playMessage,
+                getPlayButton(driver).getText());
+        assertEquals("expected stop button to display correct message in idle state.", stopMessage,
+                getStopButton(driver).getText());
         assertTrue("expected record button to be enabled in idle state.",
                 getRecordButton(driver).isEnabled());
         assertTrue("expected play button to be enabled in idle state.",
@@ -178,12 +181,12 @@ public class ControlsUITest extends AbstractAuoTest {
             return !getRecordButton(driver).isEnabled();
         });
         
-        Thread.sleep(1000);  // 1-second recording.
+        Thread.sleep(1000); // 1-second recording.
         
         getStopButton(driver).click();
         
         Web.test(driver, 5, (client) -> {
-           return getPlayButton(driver).isEnabled();
+            return getPlayButton(driver).isEnabled();
         });
         
         getPlayButton(driver).click();
@@ -206,32 +209,32 @@ public class ControlsUITest extends AbstractAuoTest {
             return !getRecordButton(driver).isEnabled();
         });
         
-        Thread.sleep(1000);  // 1-second recording.
+        Thread.sleep(1000); // 1-second recording.
         
         getStopButton(driver).click();
         
         Web.test(driver, 5, (client) -> {
-           return getPlayButton(driver).isEnabled();
+            return getPlayButton(driver).isEnabled();
         });
         
         getPlayButton(driver).click();
         
         Web.test(driver, 5, (client) -> {
-           return getStopButton(driver).isEnabled();
+            return getStopButton(driver).isEnabled();
         });
         
         getStopButton(driver).click();
         
         Web.test(driver, 5, (client) -> {
-           return getPlayButton(driver).isEnabled();
+            return getPlayButton(driver).isEnabled();
         });
         
         assertEquals("expected record button to display correct message in idle state.",
                 recordMessage, getRecordButton(driver).getText());
-        assertEquals("expected play button to display correct message in idle state.",
-                playMessage, getPlayButton(driver).getText());
-        assertEquals("expected stop button to display correct message in idle state.",
-                stopMessage, getStopButton(driver).getText());
+        assertEquals("expected play button to display correct message in idle state.", playMessage,
+                getPlayButton(driver).getText());
+        assertEquals("expected stop button to display correct message in idle state.", stopMessage,
+                getStopButton(driver).getText());
         assertTrue("expected record button to be enabled in idle state.",
                 getRecordButton(driver).isEnabled());
         assertTrue("expected play button to be enabled in idle state.",
@@ -250,30 +253,30 @@ public class ControlsUITest extends AbstractAuoTest {
             return !getRecordButton(driver).isEnabled();
         });
         
-        Thread.sleep(1000);  // 1-second recording.
+        Thread.sleep(1000); // 1-second recording.
         
         getStopButton(driver).click();
         
         Web.test(driver, 5, (client) -> {
-           return getPlayButton(driver).isEnabled();
+            return getPlayButton(driver).isEnabled();
         });
         
         getPlayButton(driver).click();
         
         Web.test(driver, 5, (client) -> {
-           return getStopButton(driver).isEnabled();
+            return getStopButton(driver).isEnabled();
         });
         
         Web.test(driver, 5, (client) -> {
-           return getPlayButton(driver).isEnabled();
+            return getPlayButton(driver).isEnabled();
         });
         
         assertEquals("expected record button to display correct message in idle state.",
                 recordMessage, getRecordButton(driver).getText());
-        assertEquals("expected play button to display correct message in idle state.",
-                playMessage, getPlayButton(driver).getText());
-        assertEquals("expected stop button to display correct message in idle state.",
-                stopMessage, getStopButton(driver).getText());
+        assertEquals("expected play button to display correct message in idle state.", playMessage,
+                getPlayButton(driver).getText());
+        assertEquals("expected stop button to display correct message in idle state.", stopMessage,
+                getStopButton(driver).getText());
         assertTrue("expected record button to be enabled in idle state.",
                 getRecordButton(driver).isEnabled());
         assertTrue("expected play button to be enabled in idle state.",

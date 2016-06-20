@@ -143,8 +143,10 @@ public class Web {
     /**
      * Macro wrapper for selecting multiple elements by CSS selector.
      * 
-     * @param driver the driver to select from.
-     * @param selector the CSS selector to use.
+     * @param driver
+     *            the driver to select from.
+     * @param selector
+     *            the CSS selector to use.
      * @return A List<WebElement>, the result of driver.findElements(By.cssSelector(selector)).
      */
     public static List<WebElement> cssSelects(final WebDriver driver, final String selector) {
