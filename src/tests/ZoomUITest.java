@@ -43,10 +43,10 @@ public class ZoomUITest extends AbstractAuoTest {
      * @formatter:on
      */
     
-    private final String cssButtonSelector = ".AuO .auo-zoom-ui > button";
-    private final String zoomInMessage = "Zoom in";
-    private final String zoomOutMessage = "Zoom out";
-    private final String zoomResetMessage = "Zoom reset";
+    private static final String cssButtonSelector = ".AuO .auo-zoom-ui > button";
+    private static final String zoomInMessage = "Zoom in";
+    private static final String zoomOutMessage = "Zoom out";
+    private static final String zoomResetMessage = "Zoom reset";
     
     /**
      * Produces the WebElement corresponding to the zoom in button.
@@ -88,9 +88,9 @@ public class ZoomUITest extends AbstractAuoTest {
         
         assertEquals("expected exactly three buttons in the controls UI.", 3, buttons.size());
         
-        assertTrue("expected zoom in button to be displayed", buttons.get(0).isDisplayed());
-        assertTrue("expected zoom out button to be displayed", buttons.get(1).isDisplayed());
-        assertTrue("expected zoom reset button to be displayed", buttons.get(2).isDisplayed());
+        assertTrue("expected zoom in button to be displayed.", buttons.get(0).isDisplayed());
+        assertTrue("expected zoom out button to be displayed.", buttons.get(1).isDisplayed());
+        assertTrue("expected zoom reset button to be displayed.", buttons.get(2).isDisplayed());
     }
     
     @Test
@@ -100,7 +100,7 @@ public class ZoomUITest extends AbstractAuoTest {
         
         assertEquals("expected zoom in button to display correct message in initial launch state.",
                 zoomInMessage, zoomIn.getText());
-        assertTrue("expected zoom in button to be enabled in initial launch state",
+        assertTrue("expected zoom in button to be enabled in initial launch state.",
                 zoomIn.isEnabled());
     }
     
@@ -111,7 +111,7 @@ public class ZoomUITest extends AbstractAuoTest {
         
         assertEquals("expected zoom out button to display correct message in initial launch state.",
                 zoomOutMessage, zoomOut.getText());
-        assertFalse("expected zoom out button to be disabled in initial launch state",
+        assertFalse("expected zoom out button to be disabled in initial launch state.",
                 zoomOut.isEnabled());
     }
     
@@ -123,7 +123,7 @@ public class ZoomUITest extends AbstractAuoTest {
         assertEquals(
                 "expected zoom reset button to display correct message in initial launch state.",
                 zoomResetMessage, zoomReset.getText());
-        assertTrue("expected zoom reset button to be enabled in initial launch state",
+        assertTrue("expected zoom reset button to be enabled in initial launch state.",
                 zoomReset.isEnabled());
     }
     
@@ -133,11 +133,11 @@ public class ZoomUITest extends AbstractAuoTest {
         
         getZoomInButton(driver).click();
         
-        assertTrue("expected zoom in button to be enabled in zoomed in state",
+        assertTrue("expected zoom in button to be enabled in zoomed in state.",
                 getZoomInButton(driver).isEnabled());
-        assertTrue("expected zoom out button to be enabled in zoomed in state",
+        assertTrue("expected zoom out button to be enabled in zoomed in state.",
                 getZoomOutButton(driver).isEnabled());
-        assertTrue("expected zoom reset button to be enabled in zoomed in state",
+        assertTrue("expected zoom reset button to be enabled in zoomed in state.",
                 getZoomResetButton(driver).isEnabled());
     }
     
@@ -150,11 +150,11 @@ public class ZoomUITest extends AbstractAuoTest {
         getZoomInButton(driver).click();
         getZoomOutButton(driver).click();
         
-        assertTrue("expected zoom in button to be enabled in more zoomed in state",
+        assertTrue("expected zoom in button to be enabled in more zoomed in state.",
                 getZoomInButton(driver).isEnabled());
-        assertTrue("expected zoom out button to be enabled in more zoomed in state",
+        assertTrue("expected zoom out button to be enabled in more zoomed in state.",
                 getZoomOutButton(driver).isEnabled());
-        assertTrue("expected zoom reset button to be enabled in more zoomed in state",
+        assertTrue("expected zoom reset button to be enabled in more zoomed in state.",
                 getZoomResetButton(driver).isEnabled());
     }
     
@@ -167,11 +167,11 @@ public class ZoomUITest extends AbstractAuoTest {
         getZoomInButton(driver).click();
         getZoomResetButton(driver).click();
         
-        assertTrue("expected zoom in button to be enabled in resetted zoom state",
+        assertTrue("expected zoom in button to be enabled in resetted zoom state.",
                 getZoomInButton(driver).isEnabled());
-        assertFalse("expected zoom out button to be disabled in resetted zoom state",
+        assertFalse("expected zoom out button to be disabled in resetted zoom state.",
                 getZoomOutButton(driver).isEnabled());
-        assertTrue("expected zoom reset button to be enabled in resetted zoom state",
+        assertTrue("expected zoom reset button to be enabled in resetted zoom state.",
                 getZoomResetButton(driver).isEnabled());
     }
     
@@ -186,11 +186,11 @@ public class ZoomUITest extends AbstractAuoTest {
         getZoomOutButton(driver).click();
         getZoomOutButton(driver).click();
         
-        assertTrue("expected zoom in button to be enabled in equally zoomed in and out state",
+        assertTrue("expected zoom in button to be enabled in equally zoomed in and out state.",
                 getZoomInButton(driver).isEnabled());
-        assertFalse("expected zoom out button to be disabled in equally zoomed in and out state",
+        assertFalse("expected zoom out button to be disabled in equally zoomed in and out state.",
                 getZoomOutButton(driver).isEnabled());
-        assertTrue("expected zoom reset button to be enabled in equally zoomed in and out state",
+        assertTrue("expected zoom reset button to be enabled in equally zoomed in and out state.",
                 getZoomResetButton(driver).isEnabled());
     }
     
@@ -204,11 +204,11 @@ public class ZoomUITest extends AbstractAuoTest {
         getZoomOutButton(driver).click();
         getZoomResetButton(driver).click();
         
-        assertTrue("expected zoom in button to be enabled in zoomed out then resetted state",
+        assertTrue("expected zoom in button to be enabled in zoomed out then resetted state.",
                 getZoomInButton(driver).isEnabled());
-        assertFalse("expected zoom out button to be disabled in zoomed out then resetted state",
+        assertFalse("expected zoom out button to be disabled in zoomed out then resetted state.",
                 getZoomOutButton(driver).isEnabled());
-        assertTrue("expected zoom reset button to be enabled in zoomed out then resetted state",
+        assertTrue("expected zoom reset button to be enabled in zoomed out then resetted state.",
                 getZoomResetButton(driver).isEnabled());
     }
     
@@ -220,11 +220,11 @@ public class ZoomUITest extends AbstractAuoTest {
         getZoomOutButton(driver).click();
         getZoomInButton(driver).click();
         
-        assertTrue("expected zoom in button to be enabled in zoom in-out-in state",
+        assertTrue("expected zoom in button to be enabled in zoom in-out-in state.",
                 getZoomInButton(driver).isEnabled());
-        assertTrue("expected zoom out button to be enabled in zoom in-out-in state",
+        assertTrue("expected zoom out button to be enabled in zoom in-out-in state.",
                 getZoomOutButton(driver).isEnabled());
-        assertTrue("expected zoom reset button to be enabled in zoom in-out-in state",
+        assertTrue("expected zoom reset button to be enabled in zoom in-out-in state.",
                 getZoomResetButton(driver).isEnabled());
     }
     
@@ -236,11 +236,11 @@ public class ZoomUITest extends AbstractAuoTest {
         getZoomResetButton(driver).click();
         getZoomInButton(driver).click();
         
-        assertTrue("expected zoom in button to be enabled in zoom in-reset-in state",
+        assertTrue("expected zoom in button to be enabled in zoom in-reset-in state.",
                 getZoomInButton(driver).isEnabled());
-        assertTrue("expected zoom out button to be enabled in zoom in-reset-in state",
+        assertTrue("expected zoom out button to be enabled in zoom in-reset-in state.",
                 getZoomOutButton(driver).isEnabled());
-        assertTrue("expected zoom reset button to be enabled in zoom in-reset-in state",
+        assertTrue("expected zoom reset button to be enabled in zoom in-reset-in state.",
                 getZoomResetButton(driver).isEnabled());
     }
 }

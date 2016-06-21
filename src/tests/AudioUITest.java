@@ -43,28 +43,28 @@ public class AudioUITest extends AbstractAuoTest {
     @Test
     public void testDisplayExists() {
         final WebDriver driver = getDriver();
-        assertTrue("expected visual display to display",
+        assertTrue("expected visual display to display.",
                 Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-display").isDisplayed());
     }
     
     @Test
     public void testEndTrimmerExists() {
         final WebDriver driver = getDriver();
-        assertTrue("expected end trimmer to display",
+        assertTrue("expected end trimmer to display.",
                 Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-end-trimmer").isDisplayed());
     }
     
     @Test
     public void testStartTrimmerExists() {
         final WebDriver driver = getDriver();
-        assertTrue("expected start trimmer to display",
+        assertTrue("expected start trimmer to display.",
                 Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-start-trimmer").isDisplayed());
     }
     
     @Test
     public void testTickerExists() {
         final WebDriver driver = getDriver();
-        assertTrue("expected ticker to display",
+        assertTrue("expected ticker to display.",
                 Web.cssSelect(driver, ".AuO .auo-audio-ui .auo-audio-ticker").isDisplayed());
     }
     

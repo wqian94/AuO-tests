@@ -27,49 +27,49 @@ public class MainUITest extends AbstractAuoTest {
     @Test
     public void testServerIsRunning() {
         final WebDriver driver = getDriver();
-        assertEquals("loaded URL should be server root", getServer().getTestURL(),
+        assertEquals("expected loaded URL to be server root.", getServer().getTestURL(),
                 driver.getCurrentUrl());
     }
     
     @Test
     public void testMainUiExistence() {
         final WebDriver driver = getDriver();
-        assertTrue("expected main UI to display",
+        assertTrue("expected main UI to display.",
                 Web.cssSelect(driver, ".AuO .auo-main-ui").isDisplayed());
     }
     
     @Test
     public void testTitleBarExistence() {
         final WebDriver driver = getDriver();
-        assertTrue("expected title bar to display",
+        assertTrue("expected title bar to display.",
                 Web.cssSelect(driver, ".AuO .auo-title-bar").isDisplayed());
     }
     
     @Test
     public void testControlsUiExistence() {
         final WebDriver driver = getDriver();
-        assertTrue("expected controls UI to display",
+        assertTrue("expected controls UI to display.",
                 Web.cssSelect(driver, ".AuO .auo-controls-ui").isDisplayed());
     }
     
     @Test
     public void testZoomUiExistence() {
         final WebDriver driver = getDriver();
-        assertTrue("expected zoom UI to display",
+        assertTrue("expected zoom UI to display.",
                 Web.cssSelect(driver, ".AuO .auo-zoom-ui").isDisplayed());
     }
     
     @Test
     public void testAudioUiExistence() {
         final WebDriver driver = getDriver();
-        assertTrue("expected audio UI to display",
+        assertTrue("expected audio UI to display.",
                 Web.cssSelect(driver, ".AuO .auo-audio-ui").isDisplayed());
     }
     
     @Test
     public void testSaveUiExistence() {
         final WebDriver driver = getDriver();
-        assertTrue("expected save UI to display",
+        assertTrue("expected save UI to display.",
                 Web.cssSelect(driver, ".AuO .auo-save-ui").isDisplayed());
     }
 }

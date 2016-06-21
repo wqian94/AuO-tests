@@ -44,10 +44,10 @@ public class ControlsUITest extends AbstractAuoTest {
      * @formatter:on
      */
     
-    private final String cssButtonSelector = ".AuO .auo-controls-ui > button";
-    private final String playMessage = "Play";
-    private final String recordMessage = "Record";
-    private final String stopMessage = "Stop";
+    private static final String cssButtonSelector = ".AuO .auo-controls-ui > button";
+    private static final String playMessage = "Play";
+    private static final String recordMessage = "Record";
+    private static final String stopMessage = "Stop";
     
     /**
      * Produces the WebElement corresponding to the record button.
@@ -89,9 +89,9 @@ public class ControlsUITest extends AbstractAuoTest {
         
         assertEquals("expected exactly three buttons in the controls UI.", 3, buttons.size());
         
-        assertTrue("expected record button to be displayed", buttons.get(0).isDisplayed());
-        assertTrue("expected play button to be displayed", buttons.get(1).isDisplayed());
-        assertTrue("expected stop button to be displayed", buttons.get(2).isDisplayed());
+        assertTrue("expected record button to be displayed.", buttons.get(0).isDisplayed());
+        assertTrue("expected play button to be displayed.", buttons.get(1).isDisplayed());
+        assertTrue("expected stop button to be displayed.", buttons.get(2).isDisplayed());
     }
     
     @Test
@@ -101,7 +101,7 @@ public class ControlsUITest extends AbstractAuoTest {
         
         assertEquals("expected record button to display correct message in initial launch state.",
                 recordMessage, record.getText());
-        assertTrue("expected record button to be enabled in initial launch state",
+        assertTrue("expected record button to be enabled in initial launch state.",
                 record.isEnabled());
     }
     
@@ -112,7 +112,7 @@ public class ControlsUITest extends AbstractAuoTest {
         
         assertEquals("expected play button to display correct message in initial launch state.",
                 playMessage, play.getText());
-        assertFalse("expected play button to be disabled in initial launch state",
+        assertFalse("expected play button to be disabled in initial launch state.",
                 play.isEnabled());
     }
     
@@ -123,7 +123,7 @@ public class ControlsUITest extends AbstractAuoTest {
         
         assertEquals("expected stop button to display correct message in initial launch state.",
                 stopMessage, stop.getText());
-        assertFalse("expected stop button to be disabled in initial launch state",
+        assertFalse("expected stop button to be disabled in initial launch state.",
                 stop.isEnabled());
     }
     
