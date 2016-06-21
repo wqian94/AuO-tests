@@ -25,9 +25,13 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
  */
 public class AuoServer extends AbstractHandler {
     private static final String TEST_URL = "TEST"; // The special-cased test page URL.
+    private static final String LIB_FILE = "AuO.js"; // The library file to use.
     
     private final String path; // Relative path to the root of the AuO.js file.
     private final Server server; // The Jetty Server that's backing the AuO server.
+    
+    private String auoJS; // Server-cached value of the AuO.js file.
+    private long auoJsModified; // Server-cached last modification time of the AuO.js file.
     
     private volatile ServerState state; // The current state of the server: RUNNING or STOPPED.
     
@@ -69,6 +73,31 @@ public class AuoServer extends AbstractHandler {
         this.path = path;
         this.server = server;
         this.state = ServerState.STOPPED;
+        auoJsModified = -1;
+        try {
+            cacheAuoJs();
+        } catch (Exception exp) {
+            exp.printStackTrace();
+        }
+    }
+    
+    /**
+     * Caches the AuO.js file if it has been modified since the last cache. Is thread-safe.
+     * 
+     * @throws IOException
+     *             if an error occurs during the reading of the AuO.js file to cache.
+     */
+    private synchronized void cacheAuoJs() throws IOException {
+        final long lastModified = new File(path + LIB_FILE).lastModified();
+        if (lastModified > auoJsModified) {
+            final StringBuilder auoJsBuilder = new StringBuilder();
+            final BufferedReader fin = new BufferedReader(new FileReader(path + LIB_FILE));
+            fin.lines().forEachOrdered(line -> auoJsBuilder.append(line + "\n"));
+            fin.close();
+            
+            auoJS = auoJsBuilder.toString();
+            auoJsModified = lastModified;
+        }
     }
     
     /**
@@ -147,10 +176,15 @@ public class AuoServer extends AbstractHandler {
 + "</html>"
                     // @formatter:on
             );
-        } else if ((TEST_URL + "-SAVE").equals(target)) {  // Generates responses to save requests.
+        } else if ((TEST_URL + "-SAVE").equals(target)) { // Generates responses to save requests.
             response.setContentType("text/plain; charset=utf-8");
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write("Save acknowledged.");
+        } else if (LIB_FILE.equalsIgnoreCase(target)) {
+            cacheAuoJs();
+            response.setContentType("application/javascript; charset=utf-8");
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(auoJS);
         } else {
             // Prepare to write document body.
             final PrintWriter out = response.getWriter();
