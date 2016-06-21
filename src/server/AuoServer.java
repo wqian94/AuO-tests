@@ -24,6 +24,8 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
  * @author wqian94
  */
 public class AuoServer extends AbstractHandler {
+    public static final String SAVE_OK_RESPONSE = "Save acknowledged.";
+    
     private static final String TEST_URL = "TEST"; // The special-cased test page URL.
     private static final String LIB_FILE = "AuO.js"; // The library file to use.
     
@@ -179,7 +181,7 @@ public class AuoServer extends AbstractHandler {
         } else if ((TEST_URL + "-SAVE").equals(target)) { // Generates responses to save requests.
             response.setContentType("text/plain; charset=utf-8");
             response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("Save acknowledged.");
+            response.getWriter().write(SAVE_OK_RESPONSE);
         } else if (LIB_FILE.equalsIgnoreCase(target)) {
             cacheAuoJs();
             response.setContentType("application/javascript; charset=utf-8");
