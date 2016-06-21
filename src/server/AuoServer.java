@@ -44,7 +44,8 @@ public class AuoServer extends AbstractHandler {
      * @param path
      *            the absolute or relative path to the AuO.js file.
      * @param port
-     *            the port to use for the server.
+     *            the port to use for the server. A value of 0 results in a randomly-chosen open
+     *            port.
      * @return An instance of AuoServer if the construction and start succeeded.
      * @throws RuntimeException
      *             if an error occurs when starting the server.
